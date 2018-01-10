@@ -16,7 +16,7 @@ To use this template, your computer needs:
 ## Installation
 
 ```bash
-git@github.com:showerlee/Flaskdev.git
+git clone git@github.com:showerlee/Flaskdev.git
 ```
 
 ```bash
