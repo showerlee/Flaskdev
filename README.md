@@ -15,12 +15,8 @@ To use this template, your computer needs:
 
 ## Installation
 
-```
-git config --global http.sslVerify false
-```
-
 ```bash
-git clone https://git.showerlee.com/showerlee/Flaskdev.git
+git@github.com:showerlee/Flaskdev.git
 ```
 
 ```bash
