@@ -1,0 +1,151 @@
+{% extends 'admin/admin_layout.html' %}
+{% block body %}
+<div class="container-fluid main-container">
+    <div class="col-md-2 sidebar">
+        <div class="row">
+            <!-- uncomment code for absolute positioning tweek see top comment in css -->
+            <div class="absolute-wrapper"> </div>
+            <!-- Menu -->
+            <div class="side-menu">
+                <nav class="navbar navbar-default" role="navigation">
+                    <!-- Main Menu -->
+                    <div class="side-menu-container">
+                        <ul class="nav navbar-nav">
+                            <li><a style="text-align: center;font-size:23px;"><span class="glyphicon glyphicon-education"></span>Flask Admin</a></li>
+                            <li><a href="/admin"><span class="glyphicon glyphicon-dashboard"></span> Dashboard</a></li>
+
+                            <!-- Dropdown -->
+                            <li class="panel panel-default" id="dropdown">
+                            <a data-toggle="collapse" href="#dropdown-users">
+                            <span class="glyphicon glyphicon-user"></span> Users<span class="caret"></span>
+                            </a>
+                                <!-- Dropdown level -->
+                                <div id="dropdown-users" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <ul class="nav navbar-nav">
+                                            <li class="active"><a href="/admin/users">All Users</a></li>
+                                            <li><a href="/admin/add_user">Add User</a></li>
+                                            <li><a href="/edit_profile">My Profile</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- End Dropdown level -->
+                            </li>
+                            <!-- End Dropdown -->
+
+                            <!-- Dropdown-->
+                            <li class="panel panel-default" id="dropdown">
+                                <a data-toggle="collapse" href="#dropdown-posts">
+                            <span class="glyphicon glyphicon-list-alt"></span> Posts<span class="caret"></span>
+                        </a>
+                                <!-- Dropdown level -->
+                                <div id="dropdown-posts" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <ul class="nav navbar-nav">
+                                            <li><a href="/admin/posts">All Posts</a></li>
+                                            <li><a href="/admin/add_post">Add Post</a></li>
+                                            <li><a href="/admin/category">Category</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- End Dropdown level -->
+                            </li>
+                            <!-- End Dropdown -->
+
+                            <!-- Dropdown-->
+                            <li class="panel panel-default" id="dropdown">
+                                <a data-toggle="collapse" href="#dropdown-setting">
+                            <span class="glyphicon glyphicon-globe"></span> Setting<span class="caret"></span>
+                                </a>
+                                <!-- Dropdown level -->
+                                <div id="dropdown-setting" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <ul class="nav navbar-nav">
+                                            <li><a href="#">General Setting</a></li>
+                                            <li><a href="/admin/invite">Invitation</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- End Dropdown level -->
+                            </li>
+                            <!-- End Dropdown -->
+                        </ul>
+                    </div>
+                    <!-- End Main Menu -->
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-10 content">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:30px"></span>
+                <span style="font-size:36px;font-weight:bold">&#8239;Users</span>
+            </div>
+            <div class="panel-body">
+                <!-- Content -->
+                {% include 'admin/includes/_messages.html' %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-sm navbar-right">
+                        <li><a href="/admin/users/{{page_list[0]}}">Top</a></li>
+                        {% if page > page_list[0] %}
+                        <li>
+                            <a href="/admin/users/{{page-1}}/" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                </a>
+                        </li>
+                        {% endif %}
+                        <li><a>Page {{page}}</a></li>
+                        {% if page
+                        < page_list[-1] %} <li>
+                            <a href="/admin/users/{{page+1}}/" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            <li><a href="/admin/users/{{page_list[-1]}}/">End</a></li>
+                    </ul>
+                </nav>
+                <table class="table table-condensed table-hover">
+                    <tr class="active">
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Fullname</th>
+                        <th>Register Date</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{user.id}}</td>
+                        <td>{{user.username}}</td>
+                        <td>{{user.fullname}}</td>
+                        <td>{{user.register_date}}</td>
+                        <td>{{user.role}}</td>
+                        <td>
+                        {% if user.user_status == 1 %}
+                            active
+                        {% else %}
+                            inactive
+                        {% endif %}
+                        </td>
+                        <td>
+                            <a href="/admin/edit_user/{{user.id}}" class="btn btn-info btn-xs pull-right">Edit</a>
+                        </td>
+                        <td>
+                            <form action="{{url_for('.admin_delete_user', id=user.id)}}" method="post">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <input type="submit" value="Delete" class="btn btn-danger btn-xs">
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <!-- End content -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+<nav aria-label="Page navigation">
+    <ul class="pagination pagination-sm navbar-right">
+        <li><a href="/admin/category/{{page_list[0]}}">Top</a></li>
+        {% if page > page_list[0] %}
+        <li>
+            <a href="/admin/category/{{page-1}}/" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                </a>
+        </li>
+        {% endif %}
+        <li><a>Page {{page}}</a></li>
+        {% if page < page_list[-1] %} <li>
+            <a href="/admin/category/{{page+1}}/" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                </a>
+            </li>
+            {% endif %}
+            <li><a href="/admin/category/{{page_list[-1]}}/">End</a></li>
+    </ul>
+</nav>
+<table class="table table-condensed table-hover">
+    <tr class="active">
+        <th>ID</th>
+        <th>Name</th>
+        <th>Alias</th>
+        <th>Parent</th>
+        <th>Date</th>
+        <th>Post Count</th>
+        <th></th>
+        <th></th>
+    </tr>
+    {% for cate in cates %}
+    <tr>
+        <td>{{cate.term_id}}</td>
+        <td>{{cate.name}}</td>
+        <td>{{cate.alias}}</td>
+        <td>{{cate.parent}}</td>
+        <td>{{cate.date_update}}</td>
+        {% for count in counts %}
+            {% if count.alias == cate.alias %}
+            <td><a href="/posts/{{count.alias}}">{{count.post_count}}</a></td>
+            {% endif %}
+        {% endfor %}
+        <td>
+            <a href="/admin/edit_category/{{cate.term_id}}" class="btn btn-info btn-xs pull-right">Edit</a>
+        </td>
+        <td>
+            <form action="{{url_for('.admin_delete_category', id=cate.term_id)}}" method="post">
+                <input type="hidden" name="_method" value="DELETE">
+                <input type="submit" value="Delete" class="btn btn-danger btn-xs">
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>

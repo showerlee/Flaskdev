@@ -1,0 +1,31 @@
+{% extends 'base/layout.html' %} 
+{% block body %}
+<div class="container">
+    <div class="row text-center">
+        <div class="col-xs-4">
+            <br>
+            <br>
+            <br>
+            <img src="{{ url_for('static', filename='images/user.jpg') }}" alt="..." class="img-circle center-block">
+            <form action="" method="POST">
+                <br>
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" value={{request.form.username}}>
+                <hr style="margin-top: -12px; visibility:hidden;" />
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" value={{request.form.password}}>
+                <hr style="margin-top: -12px; visibility:hidden;" />
+                <label>
+                    <input type="checkbox"> Remember me
+                </label>
+                <br>
+                <p>No account? <a href='/register'>Register here</a>.<button type="submit" class="btn btn-primary pull-right">Login</button></p>
+                <br>
+                <br>
+                <br>
+                <br>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

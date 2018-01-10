@@ -1,0 +1,73 @@
+{% extends 'base/layout.html' %} 
+{% block body %}
+<div class="container">
+    <span class="glyphicon glyphicon-list" aria-hidden="true" style="font-size:30px"></span>
+    <span style="font-size:36px;font-weight: bold">&#8239;Posts</span>
+    <hr style="margin-top: -8px; visibility:hidden;" />
+    <ul class="nav nav-tabs">
+        {% for term in terms %}
+            {% if term.alias == category %}
+            <li role="presentation" class="active"><a href="/posts/{{term.alias}}">{{term.name}}</a></li>
+            {% else %}
+            <li role="presentation"><a href="/posts/{{term.alias}}">{{term.name}}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-3 col-sm-6 hero-feature">
+            <div class="thumbnail">
+                <a href="/post/{{post.id}}" style="text-decoration: none;color:inherit;"><img src="{{ url_for('static', filename='images/demo.png') }}" alt="..."></a>
+                <div class="caption">
+                    <a href="/post/{{post.id}}" style="text-decoration: none;color:inherit;">
+                        <h4>{{post.post_title}}</h4>
+                        <span class="glyphicon glyphicon-user post-info" aria-hidden="true"></span>
+                        <span class="post-info">{{post.post_author}}&nbsp;</span>
+                        <span class="glyphicon glyphicon-th-list post-info" aria-hidden="true"></span>
+                        <span class="post-info">{{post.category}}&nbsp;</span>
+                        <span class="glyphicon glyphicon-eye-open post-info" aria-hidden="true"></span>
+                        <span class="post-info">views&#8239;({{post.post_count}})&nbsp;</span>
+                        <br>
+                        <span class="glyphicon glyphicon-time post-info" aria-hidden="true"></span>
+                        {% if post.post_modified == None %}
+                        <span class="post-info"> {{post.post_date}}</span>
+                        {% else %}
+                        <span class="post-info"> {{post.post_modified}}</span>
+                        {% endif %}
+                    </a>
+                    {% if session.logged_in %}
+                    <a href="/admin/edit_post/{{post.id}}" class="post-edit"><span class="glyphicon glyphicon-pencil post-edit">edit</span>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if posts != '' %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination pagination-sm navbar-right">
+            <li><a href="/posts/{{page_list[0]}}">Top</a></li>
+            {% if page > page_list[0] %}
+            <li>
+                <a href="/posts/{{page-1}}/" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            <li><a>Page {{page}}</a></li>
+            
+            {% if page < page_list[-1] %}
+            <li>
+                <a href="/posts/{{page+1}}/" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            <li><a href="/posts/{{page_list[-1]}}/">End</a></li>   
+        </ul>   
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

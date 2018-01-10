@@ -1,0 +1,27 @@
+{% extends 'base/layout.html' %}
+{% block body %}
+<div class="container">
+    <h1>{{post.post_title}}</h1>
+    <small>
+         <span class="glyphicon glyphicon-user post-info" aria-hidden="true"></span>
+         <span class="post-info"> {{post.post_author}}&nbsp;&nbsp;</span>
+         <span class="glyphicon glyphicon-time post-info" aria-hidden="true"></span>
+         <span class="post-info"> Create {{post.post_date}}&nbsp;&nbsp;
+         {% if post.post_modified != None %}
+         <span class="glyphicon glyphicon-refresh post-info" aria-hidden="true"></span>
+         <span class="post-info"> Update {{post.post_modified}}&nbsp;&nbsp;
+         {% endif %}
+         <span class="glyphicon glyphicon-th-list post-info" aria-hidden="true"></span>
+         <span class="post-info"> {{post.category}}&nbsp;&nbsp;</span>
+         <span class="glyphicon glyphicon-eye-open post-info" aria-hidden="true"></span>
+         <span class="post-info"> Views&#8239;({{post.post_count}})&nbsp;&nbsp;</span>
+         {% if session.logged_in %}
+         <a href="/admin/edit_post/{{post.id}}" class="glyphicon glyphicon-pencil" aria-hidden="true" style="color:grey;font-size:12px;text-decoration: none">&#8239;Edit</a>
+         {% endif %}
+      </small>
+    <hr>
+    <div>
+        {{post.post_content | safe}}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+<hr style="margin-top: -8px; visibility:hidden;" /> {% include 'admin/includes/_messages.html' %} {% from "admin/includes/_formhelpers.html" import render_field %}
+<form method="POST" action="">
+    <h3>{{action}}</h3>
+    <br>
+    <div class="form-group">
+        {{render_field(form.name, class_="form-control")}}
+        <p>The category name will be shown on the site. </p>
+    </div>
+    <div class="form-group">
+        {{render_field(form.alias, class_="form-control")}}
+        <p>Alias uses in the URL that makes URL more aesthetic, only lower case, numeric or underscore can be included.</p>
+    </div>
+    <div class="form-group">
+        {{render_field(form.parent, class_="form-control")}}
+        <p>Choose the parent category.</p>
+    </div>
+    <div class="form-group">
+        {{render_field(form.description, class_="form-control")}}
+        <p>Any description is preferable.</p>
+    </div>
+    <p>
+        <input type="submit" class="btn btn-primary" value="Submit">
+    </p>
+</form>

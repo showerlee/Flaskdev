@@ -1,0 +1,46 @@
+<nav class="navbar navbar-inverse light-navbar-transparent navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Flask-dev</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                {% if session.logged_in %}
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/posts/default">Posts</a></li>
+                &nbsp;&nbsp;&nbsp;<a class="btn btn-info navbar-btn" href="/admin/add_post"> Create</a>
+                {% else %}
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/posts/default">Posts</a></li>
+                {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if session.logged_in %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome {{session.fullname}}<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/edit_profile">Profile</a></li>
+                        <li><a href="/changepass">Change Password</a></li>
+                        {% if session.user_role == 1 %}
+                            <li><a href="/admin">Administrator</a></li>
+                        {% endif %}
+                        <li role="separator" class="divider"></li>
+                        <li><a href="/logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true" style="font-size:12px"></span>&#8239;Logout</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true" style="font-size:12px"></span> Login</a></li>
+                <li><a href="/register"><span class="glyphicon glyphicon-registration-mark" aria-hidden="true" style="font-size:12px"></span> Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

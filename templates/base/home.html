@@ -1,0 +1,89 @@
+{% extends 'base/layout.html' %}
+{% block body %}
+<div class="container">
+    <div class="jumbotron text-center">
+        <h1>Welcome To Flask-dev</h1>
+        <p class="lead">This application is built on Python Flask framework!</p>
+        {% if session.logged_in == NULL %}
+        <a href="/register" class="btn btn-primary btn-lg">Register</a>
+        <a href="/login" class="btn btn-success btn-lg">Login</a> {% endif %}
+    </div>
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-3 col-sm-6 hero-feature">
+            <div class="thumbnail">
+                <a href="/post/{{post.id}}" style="text-decoration: none;color:inherit;"><img src="{{ url_for('static', filename='images/demo.png') }}" alt="..."></a>
+                <div class="caption">
+                    <a href="/post/{{post.id}}" style="text-decoration: none;color:inherit;">
+                        <h4>{{post.post_title}}</h4>
+                        <span class="glyphicon glyphicon-user post-info" aria-hidden="true" style=""></span>
+                        <span class="post-info">{{post.post_author}}&nbsp;</span>
+                        <span class="glyphicon glyphicon-th-list post-info" aria-hidden="true"></span>
+                        <span class="post-info">{{post.category}}&nbsp;</span>
+                        <span class="glyphicon glyphicon-eye-open post-info" aria-hidden="true"></span>
+                        <span class="post-info">views&#8239;({{post.post_count}})&nbsp;</span>
+                        <br>
+                        <span class="glyphicon glyphicon-time post-info" aria-hidden="true"></span> {% if post.post_modified == None %}
+                        <span class="post-info"> {{post.post_date}}</span> {% else %}
+                        <span class="post-info"> {{post.post_modified}}</span> {% endif %}
+                    </a>
+                    {% if session.logged_in %}
+                    <a href="/admin/edit_post/{{post.id}}" class="post-edit"><span class="glyphicon glyphicon-pencil post-edit">edit</span>
+                </a> {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}      
+    </div>
+    <div class="container-msg">
+        <div class="more-btn">
+            <a href="/posts/default" style="text-decoration: none">
+                <button type="button" class="btn btn-default btn-lg btn-block">More...</button>
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container marketing">
+            <hr class="featurette-divider">
+                    <div class="row featurette">
+                        <div class="col-md-7">
+                            <h1 class="featurette-heading">First featurette heading. 
+                  <br>
+                  <span class="text-muted">It'll blow your mind.</span></h1>
+                            <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+                        </div>
+                        <div class="col-md-5">
+                            <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="500x500" src="{{ url_for('static', filename='images/demo.png') }}" data-holder-rendered="true">
+                        </div>
+                    </div>
+            <hr class="featurette-divider">
+            <div class="row featurette">
+                <div class="col-md-5 col-md-pull-7">
+                    <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="500x500" src="{{ url_for('static', filename='images/demo.png') }}" data-holder-rendered="true">
+                </div>
+                <div class="col-md-7 col-md-push-5">
+                    <h1 class="featurette-heading">Oh yeah, it's that good. 
+                    <br>
+                    <span class="text-muted">See for yourself.</span></h1>
+                    <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+                </div>
+            </div>
+            <hr class="featurette-divider">
+            <div class="row featurette">
+                <div class="col-md-7">
+                    <h1 class="featurette-heading">First featurette heading. 
+          <br>
+          <span class="text-muted">It'll blow your mind.</span></h1>
+                    <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+                </div>
+                <div class="col-md-5">
+                    <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="500x500" src="{{ url_for('static', filename='images/demo.png') }}" data-holder-rendered="true">
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>   
+</div>
+{% endblock %}
