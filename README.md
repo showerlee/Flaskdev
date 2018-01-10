@@ -1,4 +1,4 @@
-# FlaskApp
+# Flaskdev
 
 Simple application with frontend/backend authentication and Blog orchestration using the Python Flask micro-framework
 
