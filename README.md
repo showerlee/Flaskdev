@@ -42,5 +42,8 @@ mysql -uroot -p"Your mysql root password" flaskdev < flaskdev.sql
 ```bash
 /etc/init.d/nginx start && /etc/uwsgi/bin/uwsgi.sh start
 ```
-## Admin Login
+## Login via admin
 user/pass: flaskadmin/flaskadmin
+
+## Demo
+http://flask-dev.showerlee.com
