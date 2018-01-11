@@ -10,7 +10,7 @@ def is_logged_in(f):
             return f(*args, **kwargs)
         else:
             flash('Unauthorized, Please login.', 'danger')
-            return redirect(url_for('login'))
+            return redirect(url_for('.login'))
     return wrap
 
 
@@ -22,7 +22,7 @@ def is_active(f):
             return f(*args, **kwargs)
         else:
             flash('Unauthorized, Please check if your account is disabled.', 'danger')
-            return redirect(url_for('login'))
+            return redirect(url_for('.login'))
     return wrap
 
 
@@ -34,5 +34,5 @@ def is_admin(f):
             return f(*args, **kwargs)
         else:
             flash('Unauthorized, Please check if you have valid permission.', 'danger')
-            return redirect(url_for('index'))
+            return redirect(url_for('.index'))
     return wrap

@@ -340,13 +340,12 @@ def edit_profile():
 
         flash('Profile Updated.', 'success')
 
-        return redirect('/edit_profile/')
+        return redirect(url_for('.edit_profile'))
 
     return render_template('base/edit_profile.html', form=form, db_users=db_users)
 
+
 # Logout
-
-
 @routes.route('/logout/')
 @is_logged_in
 @is_active
