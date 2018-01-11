@@ -32,7 +32,7 @@ source .py3env/bin/activate
 ```
 
 ```bash
-pip install flask Flask-login Flask-Mail pygal flask_mysqldb flask-mysql Flask-WTF passlib uwsgi requests
+pip install flask Flask-login Flask-Mail pygal flask_mysqldb flask-mysql Flask-WTF passlib uwsgi requests Flask-Uploads
 ```
 
 ```bash
