@@ -26,7 +26,7 @@ CREATE TABLE `invitation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -35,7 +35,7 @@ CREATE TABLE `invitation` (
 
 LOCK TABLES `invitation` WRITE;
 /*!40000 ALTER TABLE `invitation` DISABLE KEYS */;
-INSERT INTO `invitation` VALUES (1,'jz-t9u6+7k!4EH_k*VF5'),(2,'!qdsV3eTy-fcb5x-&*hG');
+INSERT INTO `invitation` VALUES (1,'jz-t9u6+7k!5EH_k*VF5'),(2,'!qdsV3fTy-fcb5x-&*hG');
 /*!40000 ALTER TABLE `invitation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -57,7 +57,7 @@ CREATE TABLE `posts` (
   `post_parent` bigint(20) NOT NULL DEFAULT '0',
   `post_status` bigint(20) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -108,7 +108,7 @@ CREATE TABLE `terms` (
   `term_parent` bigint(20) NOT NULL DEFAULT '0',
   `date_update` datetime NOT NULL,
   PRIMARY KEY (`term_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -138,8 +138,9 @@ CREATE TABLE `users` (
   `user_status` int(11) NOT NULL DEFAULT '1',
   `user_role` int(11) NOT NULL DEFAULT '2',
   `description` longtext,
+  `avatar` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -148,7 +149,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'flaskadmin','$5$rounds=535000$OaZzRYsrwRNQXFUp$rdB9WHryPzDtFgqsZ3LBODaiyg05iTgiyEWV0O9k.wB','flaskadmin','flaskadmin@admin.com','2017-12-20 10:06:00',1,1,'');
+INSERT INTO `users` VALUES (1,'flaskadmin','$5$rounds=535000$iSfjoHewwjHVPITw$V7mr.RoE2jE9JyX44aVH/zZoyj.D4o0UtkNXuWiwIl6','flaskadmin','flaskadmin@admin.com','2017-12-20 10:06:00',1,1,'',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -161,4 +162,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-04 11:13:19
+-- Dump completed on 2018-01-12 23:09:32
