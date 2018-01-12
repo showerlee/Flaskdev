@@ -1121,6 +1121,11 @@ img {
 .img-rounded {
   border-radius: 6px;
 }
+.img-rounded-larger {
+  border-radius: 10px;
+  width:220px;
+  height:220px;
+}
 .img-thumbnail {
   display: inline-block;
   max-width: 100%;
@@ -1133,6 +1138,12 @@ img {
   -webkit-transition: all .2s ease-in-out;
        -o-transition: all .2s ease-in-out;
           transition: all .2s ease-in-out;
+}
+.img-thumbnail-nav {
+  border-radius: 5px;
+  width:30px;
+  height:30px;
+  margin-top: -3px;
 }
 .img-circle {
   border-radius: 50%;
@@ -3428,7 +3439,7 @@ tbody.collapse.in {
 .dropdown-menu {
   position: absolute;
   top: 100%;
-  left: 0;
+  /**left: 0;**/
   z-index: 1000;
   display: none;
   float: left;
@@ -4264,7 +4275,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
   .navbar-nav > li > a {
     padding-top: 15px;
-    padding-bottom: 15px;
+    /**padding-bottom: 15px;**/
+    padding-bottom: 5px;
   }
 }
 .navbar-form {

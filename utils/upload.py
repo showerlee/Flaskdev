@@ -1,3 +1,3 @@
-from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
+from flask_uploads import UploadSet, IMAGES
 
 photos = UploadSet('photos', IMAGES)

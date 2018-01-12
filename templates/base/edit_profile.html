@@ -1,11 +1,29 @@
 {% extends 'base/layout.html' %} {% block body %}
 <div class="container">
-    <span class="glyphicon glyphicon-info-sign" aria-hidden="true" style="font-size:30px"></span>
-    <span style="font-size:36px;font-weight: bold">&#8239;Edit Profile</span>
-    <hr style="margin-top: -8px; visibility:hidden;" /> {% from "base/includes/_formhelpers.html" import render_field %}
-    <form method="POST" action="">
-        <div class="form-group">
-            <label control-label ">Username</label>
+    <div class="col-md-3">
+        {% if db_users.avatar == None %}
+          <img src="{{ url_for('static', filename='images/user.jpg') }}" alt="..." class="img-rounded-larger center-block">
+        {% else %}
+          <img src="{{ url_for('static', filename='avatar/' + db_users.username + '/' + db_users.avatar) }}" alt="..." class="img-rounded-larger center-block">
+        {% endif %}
+        <hr style="margin-top: -8px; visibility:hidden;" />
+        <a href="/upload" style="text-decoration: none">
+                <button type="button" class="btn btn-info btn-block">Upload new picture</button>
+        </a>
+        <hr style="margin-top: -4px; visibility:hidden;" />
+        <h3>&nbsp;&nbsp;{{db_users.fullname}}
+        <br>
+        <small>&nbsp;&nbsp;&nbsp;{{db_users.username}}</small>
+        </h3>
+    </div>
+    <div class="col-md-9">
+        <span class="glyphicon glyphicon-info-sign" aria-hidden="true" style="font-size:30px"></span>
+        <span style="font-size:36px;font-weight: bold">&#8239;Edit Profile</span>
+        <hr style="margin-top: -8px; visibility:hidden;" /> 
+        {% from "base/includes/_formhelpers.html" import render_field %}
+        <form method="POST" action="">
+            <div class="form-group">
+                <label control-label ">Username</label>
             <p class="form-control-static">&nbsp;&nbsp;&nbsp;{{db_users.username}}</p>
         </div>
         <div class="form-group">
@@ -16,14 +34,15 @@
         </div>
         <div class="form-group">
             <label control-label ">Role</label>
-            <p class="form-control-static ">&nbsp;&nbsp;&nbsp;{{db_users.role}}</p>
-        </div>
-        <div class="form-group">
-            {{ render_field(form.description, class_="form-control ") }}
-        </div>
-        <p>
-            <input class="btn btn-primary" type="submit" value="Update">
-        </p>
-    </form>
+                <p class="form-control-static">&nbsp;&nbsp;&nbsp;{{db_users.role}}</p>
+            </div>
+            <div class="form-group">
+                {{ render_field(form.description, class_="form-control ") }}
+            </div>
+            <p>
+                <input class="btn btn-primary" type="submit" value="Update">
+            </p>
+        </form>
+    </div>
 </div>
 {% endblock %}

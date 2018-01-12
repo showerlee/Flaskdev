@@ -25,8 +25,16 @@
             <ul class="nav navbar-nav navbar-right">
                 {% if session.logged_in %}
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome {{session.fullname}}<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    {% if session.avatar == None %}
+                        <img src="{{ url_for('static', filename='images/user.jpg') }}" alt="..." class="img-thumbnail-nav">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='avatar/' + session.username + '/' + session.avatar) }}" alt="..." class="img-thumbnail-nav">
+                    {% endif %}
+                    <span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        <li><a>Signed in as {{session.username}}</a></li>
+                        <li role="separator" class="divider"></li>
                         <li><a href="/edit_profile">Profile</a></li>
                         <li><a href="/changepass">Change Password</a></li>
                         {% if session.user_role == 1 %}

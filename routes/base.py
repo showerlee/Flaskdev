@@ -6,6 +6,11 @@ from utils.wraps import is_logged_in, is_active
 from utils.paginate import paginate
 from . import routes
 from utils.dbconn import mysql
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+from wtforms import SubmitField
+from utils.upload import photos
+import time
 
 
 @routes.errorhandler(404)
@@ -252,6 +257,7 @@ def login():
             fullname = data['fullname']
             user_role = data['user_role']
             user_status = data['user_status']
+            avatar = data['avatar']
 
             # Compare Passwords
             if sha256_crypt.verify(password_candidate, password):
@@ -261,6 +267,7 @@ def login():
                 session['fullname'] = fullname
                 session['user_role'] = user_role
                 session['user_status'] = user_status
+                session['avatar'] = avatar
 
                 if session['user_status'] == 1:
                     flash('You are now logged in', 'success')
@@ -304,7 +311,7 @@ def edit_profile():
     res1 = cur.execute("SELECT * FROM users WHERE username = %s", [username])
     user_info = cur.fetchone()
 
-    res2 = cur.execute("SELECT u.username, r.role FROM users u, roles r WHERE u.user_role = r.id and u.username = %s", [username])
+    res2 = cur.execute("SELECT u.username, r.role, u.fullname, u.avatar FROM users u, roles r WHERE u.user_role = r.id and u.username = %s", [username])
 
     db_users = cur.fetchone()
 
@@ -343,6 +350,38 @@ def edit_profile():
         return redirect(url_for('.edit_profile'))
 
     return render_template('base/edit_profile.html', form=form, db_users=db_users)
+
+
+class UploadForm(FlaskForm):
+    photo = FileField(validators=[FileAllowed(photos, u'Image only!'), FileRequired(u'File was empty!')])
+    submit = SubmitField(u'Upload')
+
+
+@routes.route('/upload/', methods=['GET', 'POST'])
+@is_logged_in
+@is_active
+def upload_file():
+    form = UploadForm()
+    username = session['username']
+    if form.validate_on_submit():
+        filename = photos.save(form.photo.data, folder=username, name=str(int(time.time()))+'.')
+        file_url = photos.url(filename)
+        # flash(file_url)
+        # Create Cursor
+        cur = mysql.connection.cursor()
+
+        # Execute
+        cur.execute(
+            "UPDATE users SET avatar=%s WHERE username=%s", (file_url.split('/')[-1], username))
+
+        # Commit to DB
+        mysql.connection.commit()
+
+        # Close connection
+        cur.close()
+    else:
+        file_url = None
+    return render_template('base/upload.html', form=form, file_url=file_url)
 
 
 # Logout
