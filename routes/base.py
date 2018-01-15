@@ -194,22 +194,22 @@ class ChangePassForm(Form):
 @is_active
 def changepass():
     form = ChangePassForm(request.form)
-    if request.method == 'POST' and form.validate():
-        curr_password = form.curr_pass.data
-        new_password = sha256_crypt.encrypt(str(form.new_pass.data))
-        username = session['username']
 
-        # Create cursor
-        cur = mysql.connection.cursor()
+    username = session['username']
+    # Create cursor
+    cur = mysql.connection.cursor()
 
-        # Get user by username
-        res = cur.execute(
+     # Get user by username
+    res = cur.execute(
             "SELECT * FROM users WHERE username = %s", [username])
 
-        if res > 0:
-            # Get stored hash
-            data = cur.fetchone()
-            db_password = data['password']
+    if res > 0:
+        data = cur.fetchone()
+        db_password = data['password']
+
+        if request.method == 'POST' and form.validate():
+            curr_password = form.curr_pass.data
+            new_password = sha256_crypt.encrypt(str(form.new_pass.data))
 
             # Compare Passwords
             if sha256_crypt.verify(curr_password, db_password):
@@ -223,15 +223,15 @@ def changepass():
                 return redirect(url_for('.index'))
             else:
                 error = 'Invalid current password, please try it again.'
-                return render_template('base/change_pass.html', error=error, form=form)
-        else:
-            error = 'Username not found.'
-            return render_template('base/change_pass.html', error=error, form=form)
+                return render_template('base/change_pass.html', error=error, form=form, data=data)
+    else:
+        error = 'Username not found.'
+        return render_template('base/change_pass.html', error=error, form=form, data=data)
 
-        # Close connection
-        cur.close()
+    # Close connection
+    cur.close()
 
-    return render_template('base/change_pass.html', form=form)
+    return render_template('base/change_pass.html', form=form, data=data)
 
 
 # User login

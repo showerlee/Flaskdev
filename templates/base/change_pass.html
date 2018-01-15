@@ -1,22 +1,44 @@
-{% extends 'base/layout.html' %} {% block body %}
+{% extends 'base/layout.html' %}
+{% block body %}
 <div class="container">
-    {% include 'base/includes/_messages.html' %}
-    <span class="glyphicon glyphicon-refresh" aria-hidden="true" style="font-size:30px"></span>
-    <span style="font-size:36px;font-weight: bold">&#8239;Change Password</span>
-    <hr style="margin-top: -8px; visibility:hidden;" /> {% from "base/includes/_formhelpers.html" import render_field %}
-    <form method="POST" action="">
-        <div class="form-group">
-            {{render_field(form.curr_pass, class_="form-control")}}
+    <div class="col-md-3">
+        {% if data.avatar == None %}
+            <img src="{{ url_for('static', filename='images/user.jpg') }}" alt="..." class="img-rounded-larger center-block"> 
+        {% else %}
+            <img src="{{ url_for('static', filename='avatar/' + data.username + '/' + data.avatar) }}" alt="..." class="img-rounded-larger center-block"> 
+        {% endif %}
+        <hr style="margin-top: -8px; visibility:hidden;" />
+        <div class="col-md-12">
+            <a href="/upload" style="text-decoration: none">
+                <button type="button" class="btn btn-info btn-block">Upload new picture</button>
+            </a>
         </div>
-        <div class="form-group">
-            {{render_field(form.new_pass, class_="form-control")}}
-        </div>
-        <div class="form-group">
-            {{render_field(form.confirm, class_="form-control")}}
-        </div>
-        <p>
-            <input type="submit" class="btn btn-primary" value="Submit">
-        </p>
-    </form>
+        <br>
+        <br>
+        <h3>&nbsp;&nbsp;{{data.fullname}}
+        <br>
+        <small>&nbsp;&nbsp;&nbsp;{{data.username}}</small>
+        </h3>
+    </div>
+    <div class="col-md-9">
+        {% include 'base/includes/_messages.html' %}
+        <span class="glyphicon glyphicon-refresh" aria-hidden="true" style="font-size:30px"></span>
+        <span style="font-size:36px;font-weight: bold">&#8239;Change Password</span>
+        <hr style="margin-top: -8px; visibility:hidden;" /> {% from "base/includes/_formhelpers.html" import render_field %}
+        <form method="POST" action="">
+            <div class="form-group">
+                {{render_field(form.curr_pass, class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{render_field(form.new_pass, class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{render_field(form.confirm, class_="form-control")}}
+            </div>
+            <p>
+                <input type="submit" class="btn btn-primary" value="Submit">
+            </p>
+        </form>
+    </div>
 </div>
 {% endblock %}
