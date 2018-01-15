@@ -16,9 +16,6 @@
         <br>
         <br>
         <br>
-        <div class="container-msg">
-            {% include 'base/includes/_messages.html' %}
-        </div>
         {% block body %}
         {% endblock %}
         </div>
@@ -32,6 +29,7 @@
     <script type="text/javascript">
     CKEDITOR.replace('editor')
     </script>
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
 </body>
 
 </html>

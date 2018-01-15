@@ -8,7 +8,6 @@ from . import routes
 from utils.dbconn import mysql
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import SubmitField
 from utils.upload import photos
 import time
 
@@ -353,35 +352,55 @@ def edit_profile():
 
 
 class UploadForm(FlaskForm):
-    photo = FileField(validators=[FileAllowed(photos, u'Image only!'), FileRequired(u'File was empty!')])
-    submit = SubmitField(u'Upload')
+    photo = FileField(validators=[FileAllowed(['jpg', 'png'], u'Image only!'), FileRequired(u'File was empty!')])
 
 
 @routes.route('/upload/', methods=['GET', 'POST'])
 @is_logged_in
 @is_active
 def upload_file():
+    # Get session username
+    username = session['username']
+
+    # Create Cursor
+    cur = mysql.connection.cursor()
+
+    res1 = cur.execute("SELECT u.username, r.role, u.fullname, u.avatar FROM users u, roles r WHERE u.user_role = r.id and u.username = %s", [username])
+
+    db_users = cur.fetchone()
+
     form = UploadForm()
     username = session['username']
+
     if form.validate_on_submit():
         filename = photos.save(form.photo.data, folder=username, name=str(int(time.time()))+'.')
         file_url = photos.url(filename)
         # flash(file_url)
-        # Create Cursor
-        cur = mysql.connection.cursor()
+        avatar = file_url.split('/')[-1]
+
+        res2 = cur.execute("SELECT u.username, r.role, u.fullname, u.avatar FROM users u, roles r WHERE u.user_role = r.id and u.username = %s", [username])
+
+        db_users = cur.fetchone()
 
         # Execute
         cur.execute(
-            "UPDATE users SET avatar=%s WHERE username=%s", (file_url.split('/')[-1], username))
+            "UPDATE users SET avatar=%s WHERE username=%s", (avatar, username))
 
         # Commit to DB
         mysql.connection.commit()
 
-        # Close connection
-        cur.close()
+        # Update session avatar
+        session['avatar'] = avatar
+
+        flash('Avatar Updated.', 'success')
+        return redirect(url_for('.edit_profile'))
     else:
         file_url = None
-    return render_template('base/upload.html', form=form, file_url=file_url)
+
+    # Close connection
+    cur.close()
+
+    return render_template('base/upload.html', form=form, db_users=db_users, file_url=file_url)
 
 
 # Logout

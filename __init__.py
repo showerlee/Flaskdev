@@ -11,14 +11,15 @@ app.secret_key = os.urandom(24)
 # Config MySQL
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'your mysql root password'
+app.config['MYSQL_PASSWORD'] = 'Your mysql root password'
 app.config['MYSQL_DB'] = 'flaskdev'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql.init_app(app)
 
 app.config['UPLOADED_PHOTOS_DEST'] = 'static/avatar'
+app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024
 configure_uploads(app, photos)
-patch_request_class(app)  # set maximum file size, default is 16MB
+
 
 app.register_blueprint(routes)
 
