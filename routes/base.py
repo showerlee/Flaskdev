@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, session, request, current_app
+from flask import render_template, flash, redirect, url_for, session, request, jsonify
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from wtforms.fields.html5 import EmailField
 from passlib.hash import sha256_crypt
