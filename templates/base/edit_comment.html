@@ -1,0 +1,17 @@
+{% extends 'base/layout.html' %} 
+{% block body %}
+<div class="container">
+    {% include 'base/includes/_messages.html' %}
+    <span class="glyphicon glyphicon-comment" aria-hidden="true" style="font-size:30px"></span>
+    <span style="font-size:36px;font-weight: bold">&#8239;Edit comment</span>
+    <hr style="margin-top: -8px; visibility:hidden;" /> {% from "base/includes/_formhelpers.html" import render_field %}
+    <form method="POST" action="">
+        <div class="form-group">
+            {{ render_field(form.comment, class_="form-control", id="editor") }}
+        </div>
+        <p>
+            <input type="submit" class="btn btn-primary" value="Submit">
+        </p>
+    </form>
+</div>
+{% endblock %}

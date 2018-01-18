@@ -741,3 +741,111 @@ def admin_delete_invite(id):
     flash('Invitation Deleted.', 'success')
 
     return redirect(url_for('.admin_invite'))
+
+
+# Comments entry
+@routes.route('/admin/comments/')
+@routes.route('/admin/comments/<int:page>/')
+@is_logged_in
+@is_active
+@is_admin
+def admin_comments(page=1):
+    # Create cursor
+    cur = mysql.connection.cursor()
+
+    # Get posts
+    result = cur.execute("SELECT c.id, c.comm_author, c.comm_content, c.comm_date, c.comm_modified, c.comm_post, p.post_title FROM comments c, posts p WHERE c.comm_post = p.id ORDER BY c.id DESC")
+
+    if result > 0:
+        comments = cur.fetchall()
+
+        # Each page size
+        page_size = 15
+
+        # Paginated posts list
+        comments_cut = list(paginate(comments, page_size))
+
+        # Page number list
+        page_list = list(range(1, len(comments_cut) + 1))
+
+        # Close connection
+        cur.close()
+
+        if page > 0 and page < len(comments_cut) + 1:
+            return render_template('admin/admin_comments.html', comments=comments_cut[page - 1],
+                                   page=page, page_list=page_list)
+        else:
+            return redirect(url_for('.admin_comments'))
+
+
+# Comment Edit Form Class
+class CommEditForm(Form):
+    comment = TextAreaField('', [validators.Length(min=10)])
+
+
+# Edit comment
+@routes.route('/admin/edit_comment/<string:id>/', methods=['GET', 'POST'])
+@is_logged_in
+@is_active
+@is_admin
+def admin_edit_comment(id):
+    # Get form
+    form = CommEditForm(request.form)
+
+    # Create cursor
+    cur = mysql.connection.cursor()
+
+    # Get user by id
+    res1 = cur.execute("SELECT * FROM comments WHERE id = %s", [id])
+
+    db_comment = cur.fetchone()
+
+    cur.close()
+
+    # Populate comment form fields
+    form.comment.data = db_comment['comm_content']
+
+    if request.method == 'POST' and form.validate():
+        comment = request.form['comment']
+
+        # Create Cursor
+        cur = mysql.connection.cursor()
+
+        modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        cur.execute("UPDATE comments SET comm_content=%s, comm_modified=%s WHERE id=%s", (comment, modified, id))
+
+        # Commit to DB
+        mysql.connection.commit()
+
+        # Close connection
+        cur.close()
+
+        flash('Comments Updated.', 'success')
+
+        return redirect(url_for('.admin_comments'))
+
+    return render_template('admin/admin_edit_comment.html', form=form, db_comment=db_comment)
+
+
+# Delete comment
+@routes.route('/admin/delete_comment/<string:id>/', methods=['POST'])
+@is_logged_in
+@is_active
+@is_admin
+def admin_delete_comment(id):
+    # Create cursor
+    cur = mysql.connection.cursor()
+
+    # Execute
+    cur.execute("DELETE FROM comments WHERE id = %s", [id])
+
+    # Commit to DB
+    mysql.connection.commit()
+
+    # Close connection
+    cur.close()
+
+    flash('Comment Deleted.', 'success')
+
+    return redirect(url_for('.admin_comments'))

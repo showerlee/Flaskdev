@@ -1,4 +1,5 @@
-{% extends 'admin/admin_layout.html' %} {% block body %}
+{% extends 'admin/admin_layout.html' %}
+{% block body %}
 <div class="container-fluid main-container">
     <div class="col-md-2 sidebar">
         <div class="row">
@@ -13,7 +14,7 @@
                             <li><a style="text-align: center;font-size:23px;"><span class="glyphicon glyphicon-education"></span>Flask Admin</a></li>
                             <li><a href="/admin"><span class="glyphicon glyphicon-dashboard"></span> Dashboard</a></li>
 
-                             <!-- Dropdown -->
+                            <!-- Dropdown -->
                             <li class="panel panel-default" id="dropdown">
                             <a data-toggle="collapse" href="#dropdown-users">
                             <span class="glyphicon glyphicon-user"></span> Users<span class="caret"></span>
@@ -38,11 +39,11 @@
                             <span class="glyphicon glyphicon-list-alt"></span> Posts<span class="caret"></span>
                         </a>
                                 <!-- Dropdown level -->
-                                <div id="dropdown-posts" class="panel-collapse collapse in">
+                                <div id="dropdown-posts" class="panel-collapse collapse">
                                     <div class="panel-body">
                                         <ul class="nav navbar-nav">
                                             <li><a href="/admin/posts">All Posts</a></li>
-                                            <li class="active"><a href="/admin/add_post">Add Post</a></li>
+                                            <li><a href="/admin/add_post">Add Post</a></li>
                                             <li><a href="/admin/category">Category</a></li>
                                         </ul>
                                     </div>
@@ -50,7 +51,7 @@
                                 <!-- End Dropdown level -->
                             </li>
                             <!-- End Dropdown -->
-                            <li><a href="/admin/comments"><span class="glyphicon glyphicon-comment"></span> Comments</a></li>
+                            <li class="active"><a href="/admin/comments"><span class="glyphicon glyphicon-comment"></span> Comments</a></li>
                             <!-- Dropdown-->
                             <li class="panel panel-default" id="dropdown">
                                 <a data-toggle="collapse" href="#dropdown-setting">
@@ -78,26 +79,66 @@
     <div class="col-md-10 content">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <span class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:30px"></span>
-                <span style="font-size:36px;font-weight:bold">&#8239;Add Post</span>
+                <span class="glyphicon glyphicon-comment" aria-hidden="true" style="font-size:30px"></span>
+                <span style="font-size:36px;font-weight:bold">&#8239;Comments</span>
             </div>
             <div class="panel-body">
                 <!-- Content -->
-                {% from "admin/includes/_formhelpers.html" import render_field %}
-                <form method="POST" action="">
-                    <div class="form-group">
-                        {{ render_field(form.title, class_="form-control") }}
-                    </div>
-                    <div class="form-group">
-                        {{ render_field(form.category, class_="form-control") }}
-                    </div>
-                    <div class="form-group">
-                        {{ render_field(form.content, class_="form-control", id="editor") }}
-                    </div>
-                    <p>
-                        <input class="btn btn-primary" type="submit" value="Submit">
-                    </p>
-                </form>
+                {% include 'admin/includes/_messages.html' %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-sm navbar-right">
+                        <li><a href="/admin/comments/{{page_list[0]}}">Top</a></li>
+                        {% if page > page_list[0] %}
+                        <li>
+                            <a href="/admin/comments/{{page-1}}/" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                </a>
+                        </li>
+                        {% endif %}
+                        <li><a>Page {{page}}</a></li>
+                        {% if page
+                        < page_list[-1] %} <li>
+                            <a href="/admin/comments/{{page+1}}/" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            <li><a href="/admin/comments/{{page_list[-1]}}/">End</a></li>
+                    </ul>
+                </nav>
+                <table class="table table-condensed table-hover">
+                    <tr class="active">
+                        <th>ID</th>
+                        <th>Author</th>
+                        <th>Comment</th>
+                        <th>Create Date</th>
+                        <th>Modified Date</th>
+                        <th>Post</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    {% for comm in comments %}
+                    <tr>
+                        <td>{{comm.id}}</td>
+                        <td>{{comm.comm_author}}</td>
+                        <td>{{comm.comm_content | safe}}</td>
+                        <td>{{comm.comm_date}}</td>
+                        <td>{{comm.comm_modified}}</td>
+                        <td>
+                        <a href="/post/{{comm.comm_post}}">{{comm.post_title}}</a>
+                        </td>
+                        <td>
+                            <a href="/admin/edit_comment/{{comm.id}}" class="btn btn-info btn-xs pull-right">Edit</a>
+                        </td>
+                        <td>
+                            <form action="{{url_for('.admin_delete_comment', id=comm.id)}}" method="post">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="submit" value="Delete" class="btn btn-danger btn-xs">
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
                 <!-- End content -->
             </div>
         </div>

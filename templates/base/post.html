@@ -1,16 +1,16 @@
-{% extends 'base/layout.html' %}
-{% block body %}
-<div class="container">
+{% extends 'base/layout.html' %} {% block body %}
+<div class="container-post">
     {% include 'base/includes/_messages.html' %}
+    <!-- Header -->
     <h1>{{post.post_title}}</h1>
     <small>
          <span class="glyphicon glyphicon-user post-info" aria-hidden="true"></span>
          <span class="post-info"> {{post.post_author}}&nbsp;&nbsp;</span>
          <span class="glyphicon glyphicon-time post-info" aria-hidden="true"></span>
-         <span class="post-info"> Create {{post.post_date}}&nbsp;&nbsp;
+         <span class="post-info"> Create {{post.post_date}}&nbsp;&nbsp;</span>
          {% if post.post_modified != None %}
          <span class="glyphicon glyphicon-refresh post-info" aria-hidden="true"></span>
-         <span class="post-info"> Update {{post.post_modified}}&nbsp;&nbsp;
+         <span class="post-info"> Update {{post.post_modified}}&nbsp;&nbsp;</span>
          {% endif %}
          <span class="glyphicon glyphicon-th-list post-info" aria-hidden="true"></span>
          <span class="post-info"> {{post.category}}&nbsp;&nbsp;</span>
@@ -20,9 +20,56 @@
          <a href="/admin/edit_post/{{post.id}}" class="glyphicon glyphicon-pencil" aria-hidden="true" style="color:grey;font-size:12px;text-decoration: none">&#8239;Edit</a>
          {% endif %}
       </small>
-    <hr>
+    <!-- End Header -->
+    
+    <!-- Content -->
     <div>
+        <hr>
         {{post.post_content | safe}}
+        <hr>
     </div>
+    <!-- End Content -->
+    
+    <!-- Comment -->
+    <br>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    <h4>Comments</h4></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comm in comments %}
+            <tr>
+                <td>
+                    <p>
+                        <strong>{{comm.comm_author}}</strong> added a comment on <em>{{comm.comm_date}}</em> 
+                        {% if comm.comm_modified != None %}
+                         modified on <em>{{comm.comm_modified}}</em> 
+                        {% endif %}
+                        {% if session.user_role == 1 %}
+                        <a href="/edit_comment/{{comm.id}}" class="glyphicon glyphicon-pencil" aria-hidden="true" style="color:grey;font-size:12px;text-decoration: none">&#8239;Edit</a>
+                        {% endif %}
+                    </p>
+                    <br> 
+                    {{comm.comm_content | safe}}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if session.logged_in %} 
+    {% from "admin/includes/_formhelpers.html" import render_field %}
+    <form method="POST" action="">
+        <div class="form-group">
+            {{ render_field(form.comment, class_="form-control", id="editor") }}
+        </div>
+        <p>
+            <input class="btn btn-primary" type="submit" value="Submit">
+        </p>
+    </form>
+    {% endif %}
+    <!-- End Comment -->
 </div>
 {% endblock %}

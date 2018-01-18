@@ -1123,8 +1123,8 @@ img {
 }
 .img-rounded-larger {
   border-radius: 10px;
-  width:220px;
-  height:220px;
+  width:240px;
+  height:240px;
 }
 .img-thumbnail {
   display: inline-block;
@@ -1578,8 +1578,31 @@ pre code {
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
-  height: 718px;
 }
+
+.container-profile {
+  padding-right: 210.5px;
+  padding-left: 210.5px;
+  margin-right: auto;
+  margin-left: auto;
+  height: 698px;
+}
+
+.container-post {
+  padding-right: 240.5px;
+  padding-left: 240.5px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.container-base {
+  padding-right: 240.5px;
+  padding-left: 240.5px;
+  margin-right: auto;
+  margin-left: auto;
+  height: 698px;
+}
+
 @media (min-width: 768px) {
   .container {
     width: 750px;

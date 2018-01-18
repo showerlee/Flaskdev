@@ -2,14 +2,16 @@ from flask import render_template, flash, redirect, url_for, session, request, j
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from wtforms.fields.html5 import EmailField
 from passlib.hash import sha256_crypt
-from utils.wraps import is_logged_in, is_active
+from utils.wraps import is_logged_in, is_active, is_admin
 from utils.paginate import paginate
 from . import routes
 from utils.dbconn import mysql
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from utils.upload import photos
+from datetime import datetime
 import time
+
 
 
 @routes.errorhandler(404)
@@ -86,8 +88,13 @@ def posts(page=1, category='default'):
         return render_template('base/posts.html', msg=msg, posts=posts, terms=terms, category=category)
 
 
+# Comment Form Class
+class CommentForm(Form):
+    comment = TextAreaField('', [validators.Length(min=10)])
+
+
 # Single post
-@routes.route('/post/<string:id>/')
+@routes.route('/post/<string:id>/', methods=['GET', 'POST'])
 def post(id):
     # Create cursor
     conn = mysql.connection
@@ -106,9 +113,33 @@ def post(id):
     post = cur.fetchone()
 
     conn.commit()
+
+    # Get comment
+    result = cur.execute("SELECT c.id, c.comm_author, c.comm_content, c.comm_date, c.comm_modified FROM comments c, posts p WHERE c.comm_post = p.id AND p.id = %s ORDER BY c.id DESC", (id,))
+    comments = cur.fetchall()
+
+    form = CommentForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        comment = request.form['comment']
+
+        # Create Cursor
+        cur = mysql.connection.cursor()
+
+        # Execute
+        cur.execute("INSERT INTO comments(comm_author, comm_content, comm_post) VALUES(%s, %s, %s)",
+                    (session['fullname'], comment, id))
+
+        # Commit to DB
+        mysql.connection.commit()
+
+        flash('Comment created...', 'success')
+
+        return redirect('/post/%s' %(id))
+
     cur.close()
 
-    return render_template('base/post.html', post=post)
+    return render_template('base/post.html', post=post, form=form, comments=comments)
 
 
 # Register Form Class
@@ -401,6 +432,56 @@ def upload_file():
     cur.close()
 
     return render_template('base/upload.html', form=form, db_users=db_users, file_url=file_url)
+
+
+# Comment Edit Form Class
+class CommEditForm(Form):
+    comment = TextAreaField('', [validators.Length(min=10)])
+
+# Edit comment
+@routes.route('/edit_comment/<string:id>/', methods=['GET', 'POST'])
+@is_logged_in
+@is_active
+@is_admin
+def edit_comment(id):
+    # Get form
+    form = CommEditForm(request.form)
+
+    # Create cursor
+    cur = mysql.connection.cursor()
+
+    # Get user by id
+    res1 = cur.execute("SELECT c.comm_content, p.id FROM comments c, posts p WHERE c.comm_post = p.id AND c.id = %s", [id])
+
+    db_comment = cur.fetchone()
+
+    cur.close()
+
+    # Populate comment form fields
+    form.comment.data = db_comment['comm_content']
+    post_id = db_comment['id']
+
+    if request.method == 'POST' and form.validate():
+        comment = request.form['comment']
+
+        # Create Cursor
+        cur = mysql.connection.cursor()
+
+        modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        cur.execute("UPDATE comments SET comm_content=%s, comm_modified=%s WHERE id=%s", (comment, modified, id))
+
+        # Commit to DB
+        mysql.connection.commit()
+
+        # Close connection
+        cur.close()
+
+        flash('Comments Updated.', 'success')
+
+        return redirect('/post/%s' % (post_id))
+
+    return render_template('base/edit_comment.html', form=form, db_comment=db_comment)
 
 
 # Logout

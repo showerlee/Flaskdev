@@ -1,6 +1,6 @@
 {% extends 'base/layout.html' %} 
 {% block body %}
-<div class="container">
+<div class="container-profile">
     <div class="col-md-3">
         {% if db_users.avatar == None %}
         <img src="{{ url_for('static', filename='images/user.jpg') }}" alt="..." class="img-rounded-larger center-block"> {% else %}
