@@ -44,6 +44,8 @@
                         <li><a href="/logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true" style="font-size:12px"></span>&#8239;Logout</a></li>
                     </ul>
                 </li>
+                {% elif setting('users_can_register') == 0 %}
+                <li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true" style="font-size:12px"></span> Login</a></li>
                 {% else %}
                 <li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true" style="font-size:12px"></span> Login</a></li>
                 <li><a href="/register"><span class="glyphicon glyphicon-registration-mark" aria-hidden="true" style="font-size:12px"></span> Register</a></li>

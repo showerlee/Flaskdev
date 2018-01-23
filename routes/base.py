@@ -203,51 +203,64 @@ class RegisterForm(Form):
 # User Register
 @routes.route('/register/', methods=['GET', 'POST'])
 def register():
+    # Create cursor
+    cur = mysql.connection.cursor()
+
+    # Get register id
+    res = cur.execute("SELECT option_value FROM options WHERE option_name='users_can_register'")
+
+    db_register = cur.fetchone()
+
     form = RegisterForm(request.form)
-    if request.method == 'POST' and form.validate():
-        fullname = form.fullname.data
-        email = form.email.data
-        username = form.username.data
-        password = sha256_crypt.encrypt(str(form.password.data))
-        code = form.code.data
 
-        # Create cursor
-        cur = mysql.connection.cursor()
+    if int(db_register['option_value']) == 1:
+        if request.method == 'POST' and form.validate():
+            fullname = form.fullname.data
+            email = form.email.data
+            username = form.username.data
+            password = sha256_crypt.encrypt(str(form.password.data))
+            code = form.code.data
 
-        # Get invitation code
-        res1 = cur.execute("SELECT code FROM invitation")
+            # Create cursor
+            cur = mysql.connection.cursor()
 
-        db_code = cur.fetchall()
+            # Get invitation code
+            res1 = cur.execute("SELECT code FROM invitation")
 
-        res2 = cur.execute("SELECT username FROM users")
+            db_code = cur.fetchall()
 
-        db_username = cur.fetchall()
+            res2 = cur.execute("SELECT username FROM users")
 
-        if username.lower() not in list(map(lambda i: i['username'], db_username)):
+            db_username = cur.fetchall()
 
-            if code in list(map(lambda i: i['code'], db_code)):
-                # Insert user info
-                cur.execute("INSERT INTO users(fullname, email, username, password) VALUES(%s, %s, %s, %s)",
-                            (fullname, email.lower(), username.lower(), password))
+            if username.lower() not in list(map(lambda i: i['username'], db_username)):
 
-                # Commit to DB
-                mysql.connection.commit()
+                if code in list(map(lambda i: i['code'], db_code)):
+                    # Insert user info
+                    cur.execute("INSERT INTO users(fullname, email, username, password) VALUES(%s, %s, %s, %s)",
+                                (fullname, email.lower(), username.lower(), password))
 
-                flash('You are now registered and can log in.', 'success')
+                    # Commit to DB
+                    mysql.connection.commit()
 
-                return redirect(url_for('.login'))
+                    flash('You are now registered and can log in.', 'success')
+
+                    return redirect(url_for('.login'))
+                else:
+                    error = 'Invalid invitation code, please try it again.'
+                    return render_template('base/register.html', form=form, error=error)
+
             else:
-                error = 'Invalid invitation code, please try it again.'
+                error = 'Username "%s" exists, please try another one.' % username
                 return render_template('base/register.html', form=form, error=error)
 
-        else:
-            error = 'Username "%s" exists, please try another one.' % username
-            return render_template('base/register.html', form=form, error=error)
+            # Close connection
+            cur.close()
 
-        # Close connection
-        cur.close()
-
-    return render_template('base/register.html', form=form)
+        return render_template('base/register.html', form=form)
+    else:
+        flash('Registation disabled, please contact admin for further assistance', 'warning')
+        return redirect(url_for('.index'))
 
 
 # Register Form Class
