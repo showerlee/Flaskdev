@@ -189,6 +189,7 @@ def delete_post(id):
 
     # Execute
     cur.execute("DELETE FROM posts WHERE id = %s", [id])
+    cur.execute("DELETE FROM comments WHERE comm_post = %s", [id])
 
     # Commit to DB
     mysql.connection.commit()
@@ -536,8 +537,11 @@ def admin_add_user():
 @is_active
 @is_admin
 def admin_delete_user(id):
-    if int(id)==1:
+    if int(id) == 1:
         flash('Default Admin can not be deleted.', 'warning')
+        return redirect(url_for('.admin_users'))
+    elif int(id) == session['user_id']:
+        flash('You can not delete yourself.', 'warning')
         return redirect(url_for('.admin_users'))
     else:
         # Create cursor

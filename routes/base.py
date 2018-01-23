@@ -330,6 +330,7 @@ def login():
             user_role = data['user_role']
             user_status = data['user_status']
             avatar = data['avatar']
+            user_id = data['id']
 
             # Compare Passwords
             if sha256_crypt.verify(password_candidate, password):
@@ -340,6 +341,7 @@ def login():
                 session['user_role'] = user_role
                 session['user_status'] = user_status
                 session['avatar'] = avatar
+                session['user_id'] = user_id
 
                 if session['user_status'] == 1:
                     flash('You are now logged in', 'success')
