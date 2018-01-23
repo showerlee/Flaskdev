@@ -58,7 +58,7 @@
                                 <div id="dropdown-setting" class="panel-collapse collapse">
                                     <div class="panel-body">
                                         <ul class="nav navbar-nav">
-                                            <li><a href="#">General Setting</a></li>
+                                            <li><a href="/admin/setting">General Setting</a></li>
                                             <li><a href="/admin/invite">Invitation</a></li>
                                         </ul>
                                     </div>
@@ -83,7 +83,7 @@
             <div class="panel-body">
                 <!-- Content -->
                 <div class="jumbotron">
-                    <h1>Welcome To Flask-dev Dashboad</h1>
+                    <h1>Welcome To {{ setting('bloghome') }} Dashboad</h1>
                     <p class="lead">This dashboard is built on Python Flask framework!</p>
                     Functionality: <div class="progress">
                         <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" style="width: 65%">

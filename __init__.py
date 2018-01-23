@@ -11,7 +11,7 @@ app.secret_key = os.urandom(24)
 # Config MySQL
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Your mysql root password'
+app.config['MYSQL_PASSWORD'] = 'your mysql root password'
 app.config['MYSQL_DB'] = 'flaskdev'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql.init_app(app)

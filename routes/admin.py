@@ -755,10 +755,9 @@ def admin_comments(page=1):
 
     # Get posts
     result = cur.execute("SELECT c.id, c.comm_author, c.comm_content, c.comm_date, c.comm_modified, c.comm_post, p.post_title FROM comments c, posts p WHERE c.comm_post = p.id ORDER BY c.id DESC")
+    comments = cur.fetchall()
 
     if result > 0:
-        comments = cur.fetchall()
-
         # Each page size
         page_size = 15
 
@@ -776,6 +775,12 @@ def admin_comments(page=1):
                                    page=page, page_list=page_list)
         else:
             return redirect(url_for('.admin_comments'))
+    else:
+        msg = 'No comments Found.'
+        comments = ''
+        page_list = [1]
+        return render_template('admin/admin_comments.html', comments=comments,
+                                page=page, page_list=page_list, msg=msg)
 
 
 # Comment Edit Form Class
@@ -849,3 +854,93 @@ def admin_delete_comment(id):
     flash('Comment Deleted.', 'success')
 
     return redirect(url_for('.admin_comments'))
+
+
+# General Setting Form Class
+class SettingForm(Form):
+    siteurl = StringField('Site URL', [validators.Length(min=0, max=100)])
+    home = StringField('Home', [validators.Length(min=0, max=100)])
+    bloghome = StringField('Blog Home', [validators.Length(min=0, max=100)])
+    blogdescription = TextAreaField(
+        'Blog Description', [validators.Length(min=0, max=200)])
+    adminemail = EmailField('Admin Email', [validators.Length(
+        min=6, max=50), validators.Email()])
+    register = RadioField('User Can Register', coerce=int)
+
+
+# Edit post
+@routes.route('/admin/setting/', methods=['GET', 'POST'])
+@is_logged_in
+@is_active
+@is_admin
+def admin_setting():
+    # Get form
+    form = SettingForm(request.form)
+
+    # Create cursor
+    cur = mysql.connection.cursor()
+
+    field_dict ={'siteurl': '',
+                'home': '',
+                'bloghome': '',
+                'blogdescription': '',
+                'admin_email': '',
+                'users_can_register': ''}
+
+    for key, val in field_dict.items():
+
+        # Get all setting
+        res1 = cur.execute("SELECT * FROM options WHERE option_name = %s", (str(key),))
+
+        db_options = cur.fetchone()
+
+        field_dict[key] = db_options['option_value'] if key != 'users_can_register' else int(db_options['option_value'])
+
+    # Populate user_status form fields
+    register_list = [(1, 'Yes'), (0, 'No')]
+
+    cur.close()
+
+    # Populate setting form fields
+    form.siteurl.data = field_dict['siteurl']
+    form.home.data = field_dict['home']
+    form.bloghome.data = field_dict['bloghome']
+    form.blogdescription.data = field_dict['blogdescription']
+    form.adminemail.data = field_dict['admin_email']
+    form.register.choices = register_list
+    form.register.process_data(field_dict['users_can_register'])
+
+
+    if request.method == 'POST' and form.validate():
+        siteurl = request.form['siteurl']
+        home = request.form['home']
+        bloghome = request.form['bloghome']
+        blogdescription = request.form['blogdescription']
+        adminemail = request.form['adminemail']
+        register = request.form['register']
+
+        form_dict = {'siteurl': siteurl,
+                    'home': home,
+                    'bloghome': bloghome,
+                    'blogdescription': blogdescription,
+                    'admin_email': adminemail,
+                    'users_can_register': register}
+
+        # Create Cursor
+        cur = mysql.connection.cursor()
+
+        for key, val in form_dict.items():
+            cur.execute(
+                "UPDATE options SET option_value=%s WHERE option_name=%s", (val, key))
+
+        # Commit to DB
+        mysql.connection.commit()
+
+        # Close connection
+        cur.close()
+
+        flash('Setting Updated.', 'success')
+
+        return redirect(url_for('.admin_setting'))
+
+    return render_template('admin/admin_setting.html', form=form, db_options=db_options)

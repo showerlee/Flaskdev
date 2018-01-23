@@ -13,6 +13,35 @@ from datetime import datetime
 import time
 
 
+@routes.context_processor
+def inject_global_setting():
+    def setting(field):
+        # Create cursor
+        cur = mysql.connection.cursor()
+
+        field_dict ={'siteurl': '',
+                    'home': '',
+                    'bloghome': '',
+                    'blogdescription': '',
+                    'admin_email': '',
+                    'users_can_register': ''}
+
+        for key, val in field_dict.items():
+
+            # Get all setting
+            res1 = cur.execute("SELECT * FROM options WHERE option_name = %s", (str(key),))
+
+            db_options = cur.fetchone()
+
+            field_dict[key] = db_options['option_value'] if key != 'users_can_register' else int(db_options['option_value'])
+
+
+        cur.close()
+
+        return field_dict[field]
+
+    return dict(setting=setting)
+
 
 @routes.errorhandler(404)
 def page_not_found(e):
@@ -31,11 +60,24 @@ def index():
     cur = mysql.connection.cursor()
 
     # Get posts
-    result = cur.execute("SELECT p.id, p.post_title, p.post_author, p.post_content, p.post_date, p.post_modified, p.post_count, t.name AS category FROM posts p LEFT JOIN terms t ON p.post_parent = t.term_id ORDER BY p.id DESC LIMIT 8")
+    res1 = cur.execute("SELECT p.id, p.post_title, p.post_author, p.post_content, p.post_date, p.post_modified, p.post_count, t.name AS category FROM posts p LEFT JOIN terms t ON p.post_parent = t.term_id ORDER BY p.id DESC LIMIT 8")
 
     posts = cur.fetchall()
 
-    if result > 0:
+    # Write site_url to DB
+    field_list = ['siteurl', 'home']
+
+    for field in field_list:
+        res2 = cur.execute("SELECT option_value FROM options WHERE option_name=%s", (field,))
+        db_field = cur.fetchone()
+
+        if db_field['option_value'] == '':
+            site_url = request.base_url
+            res3 = cur.execute("UPDATE options SET option_value=%s WHERE option_name=%s", (site_url, field))
+            # Commit to DB
+            mysql.connection.commit()
+
+    if res1 > 0:
         return render_template('base/home.html', posts=posts)
     else:
         msg = 'No posts Found.'

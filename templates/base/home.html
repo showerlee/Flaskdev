@@ -1,9 +1,9 @@
-    {% extends 'base/layout.html' %}
+{% extends 'base/layout.html' %}
 {% block body %}
 <div class="container">
     {% include 'base/includes/_messages.html' %}
     <div class="jumbotron text-center">
-        <h1>Welcome To Flask-dev</h1>
+        <h1>Welcome To {{ setting('bloghome') }}</h1>
         <p class="lead">This application is built on Python Flask framework!</p>
         {% if session.logged_in == NULL %}
         <a href="/register" class="btn btn-primary btn-lg">Register</a>
@@ -20,7 +20,7 @@
                         <span class="glyphicon glyphicon-user post-info" aria-hidden="true" style=""></span>
                         <span class="post-info">{{post.post_author}}&#8239;</span>
                         <span class="glyphicon glyphicon-th-list post-info" aria-hidden="true"></span>
-                        <span class="post-info">{{post.category}}&nbsp;</span>
+                        <span class="post-info">{{post.category}}&#8239;</span>
                         <span class="glyphicon glyphicon-eye-open post-info" aria-hidden="true"></span>
                         <span class="post-info">views&#8239;({{post.post_count}})</span>
                         <br>

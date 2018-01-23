@@ -18,10 +18,10 @@
                             <span class="glyphicon glyphicon-user"></span> Users<span class="caret"></span>
                             </a>
                                 <!-- Dropdown level -->
-                                <div id="dropdown-users" class="panel-collapse collapse in">
+                                <div id="dropdown-users" class="panel-collapse collapse">
                                     <div class="panel-body">
                                         <ul class="nav navbar-nav">
-                                            <li class="active"><a href="/admin/users">All Users</a></li>
+                                            <li><a href="/admin/users">All Users</a></li>
                                             <li><a href="/admin/add_user">Add User</a></li>
                                             <li><a href="/edit_profile">My Profile</a></li>
                                         </ul>
@@ -55,10 +55,10 @@
                             <span class="glyphicon glyphicon-globe"></span> Setting<span class="caret"></span>
                                 </a>
                                 <!-- Dropdown level -->
-                                <div id="dropdown-setting" class="panel-collapse collapse">
+                                <div id="dropdown-setting" class="panel-collapse collapse in">
                                     <div class="panel-body">
                                         <ul class="nav navbar-nav">
-                                            <li><a href="/admin/setting">General Setting</a></li>
+                                            <li class="active"><a href="/admin/setting">General Setting</a></li>
                                             <li><a href="/admin/invite">Invitation</a></li>
                                         </ul>
                                     </div>
@@ -76,41 +76,33 @@
     <div class="col-md-10 content">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <span class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:30px"></span>
+                <span class="glyphicon glyphicon-globe" aria-hidden="true" style="font-size:30px"></span>
                 <span style="font-size:36px;font-weight:bold">&#8239;Edit User</span>
             </div>
             <div class="panel-body">
                 <!-- Content -->
-                {% include 'admin/includes/_messages.html' %} 
-                {% from "admin/includes/_formhelpers.html" import render_field %}
+                {% include 'admin/includes/_messages.html' %} {% from "admin/includes/_formhelpers.html" import render_field %}
                 <form method="POST" action="">
                     <div class="form-group">
-                        <label control-label">Username</label>
-                        <p class="form-control-static">&nbsp;&nbsp;&nbsp;{{db_user.username}}</p>
+                        {{ render_field(form.siteurl, class_="form-control") }}
                     </div>
                     <div class="form-group">
-                        {{ render_field(form.fullname, class_="form-control") }}
+                        {{ render_field(form.home, class_="form-control") }}
                     </div>
                     <div class="form-group">
-                        {{ render_field(form.email, class_="form-control") }}
+                        {{ render_field(form.bloghome, class_="form-control") }}
                     </div>
                     <div class="form-group">
-                        {{ render_field(form.role, class_="form-control") }}
+                        {{ render_field(form.blogdescription, class_="form-control") }}
                     </div>
                     <div class="form-group">
-                        {{ render_field(form.description, class_="form-control") }}
+                        {{ render_field(form.adminemail, class_="form-control") }}
                     </div>
                     <div class="form-group">
-                        {{ form.status.label }}&nbsp;&nbsp;&nbsp;&nbsp;
-                        {% for subfield in form.status %}
-                            {{ subfield }}&nbsp;{{ subfield.label }}&nbsp;&nbsp;
+                        {{ form.register.label }}&nbsp;&nbsp;&nbsp;&nbsp; 
+                        {% for subfield in form.register %} 
+                            {{ subfield }}&nbsp;{{ subfield.label }}&nbsp;&nbsp; 
                         {% endfor %}
-                    </div>
-                    <div class="form-group">
-                        {{render_field(form.password, class_="form-control")}}
-                    </div>
-                    <div class="form-group">
-                        {{render_field(form.confirm, class_="form-control")}}
                     </div>
                     <p>
                         <input class="btn btn-primary" type="submit" value="Submit">

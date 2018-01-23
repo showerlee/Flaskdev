@@ -30,7 +30,7 @@ CREATE TABLE `comments` (
   `comm_modified` datetime DEFAULT NULL,
   `comm_post` bigint(20) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,6 @@ CREATE TABLE `comments` (
 
 LOCK TABLES `comments` WRITE;
 /*!40000 ALTER TABLE `comments` DISABLE KEYS */;
-INSERT INTO `comments` VALUES (1,'zhenbaobao','<p>dwadwadwadwadwa</p>\r\n','2018-01-17 08:52:06',NULL,17),(2,'zhenbaobao','<p>11111111111111111111111111</p>\r\n','2018-01-17 08:56:30',NULL,17),(3,'zhenbaobao','<p>testcomment321</p>\r\n','2018-01-17 08:58:19','2018-01-18 13:58:08',17),(4,'zhenbaobao','<p>testhahahah</p>\r\n','2018-01-17 09:48:16','2018-01-18 12:20:33',17),(5,'zhenbaobao','<p>hehehehehhehehehehhehehehehhehehehehheheheheh123321321</p>\r\n','2018-01-17 09:48:24','2018-01-18 14:32:16',17),(7,'zhenbaobao','<p>hahaheheheheh</p>\r\n','2018-01-17 10:00:10','2018-01-18 11:41:32',16);
 /*!40000 ALTER TABLE `comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -65,6 +64,31 @@ LOCK TABLES `invitation` WRITE;
 /*!40000 ALTER TABLE `invitation` DISABLE KEYS */;
 INSERT INTO `invitation` VALUES (1,'jz-t9u6+7k!5EH_k*VF5'),(2,'!qdsV3fTy-fcb5x-&*hG');
 /*!40000 ALTER TABLE `invitation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `options`
+--
+
+DROP TABLE IF EXISTS `options`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `options` (
+  `option_id` bigint(20) NOT NULL,
+  `option_name` varchar(191) NOT NULL,
+  `option_value` longtext NOT NULL,
+  PRIMARY KEY (`option_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `options`
+--
+
+LOCK TABLES `options` WRITE;
+/*!40000 ALTER TABLE `options` DISABLE KEYS */;
+INSERT INTO `options` VALUES (1,'siteurl',''),(2,'home',''),(3,'bloghome','Flask-dev'),(4,'blogdescription',''),(5,'admin_email','admin@admin.com'),(6,'users_can_register','1');
+/*!40000 ALTER TABLE `options` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -177,7 +201,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'flaskadmin','$5$rounds=535000$FQP9k5H0b8pAkQ/L$Pfk1tPWFv1bivtUlMYN6lwzERu4LkWl/ZM5BfvdfGzA','flaskadmin','flaskadmin@admin.com','2017-12-20 10:06:00',1,1,'',NULL);
+INSERT INTO `users` VALUES (1,'flaskadmin','$5$rounds=535000$SC6pPR4/Lu7p2gR7$3Oq0EPfWZPLn5u/vRqXVFgSdT6sdM8muK8nySkAPIx9','flaskadmin','flaskadmin@admin.com','2017-12-20 10:06:00',1,1,'',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -190,4 +214,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-18 14:52:54
+-- Dump completed on 2018-01-23 12:20:10
